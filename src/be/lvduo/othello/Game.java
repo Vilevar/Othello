@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.lvduo.othello.player.Player;
+import be.lvduo.othello.Directions.*;
+
 
 public class Game {
 
@@ -57,7 +59,23 @@ public class Game {
 			for(int x = 0; x < Board.WIDTH; x++) {
 				if(Board.canPlayOn(x, y)) {
 					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
-						
+		
+						for(Directions direction : Directions.values()) {
+							Point point = new Point(x-direction.dirX, y-direction.dirY);
+							
+							if(this.board.getPiece(point) == Piece.BLANK) {
+								dir: for(int i = x+direction.dirX, j = y+direction.dirY; Board.canPlayOn(i, j); i+=direction.dirX, j+=direction.dirY) {
+									if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
+										if(this.board.getPiece(i,j) == player.getColor() && squares.contains(point)) {
+											squares.add(point);
+										}
+										continue dir;
+									}
+								}
+							}
+							
+						}
+						/*
 						left: if(this.board.getPiece(x - 1, y) == Piece.BLANK) {
 							for(int i = x + 1; i < Board.WIDTH; i++) {
 								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
@@ -138,6 +156,7 @@ public class Game {
 								}
 							}
 						}
+						*/
 					}
 				}
 			}
