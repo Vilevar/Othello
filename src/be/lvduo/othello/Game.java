@@ -60,13 +60,13 @@ public class Game {
 				if(Board.canPlayOn(x, y)) {
 					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
 		
-						for(Directions direction : Directions.values()) {
-							Point point = new Point(x-direction.dirX, y-direction.dirY);
+						dir: for(Directions direction : Directions.values()) {
+							Point point = new Point(x - direction.dirX, y - direction.dirY);
 							
 							if(this.board.getPiece(point) == Piece.BLANK) {
-								dir: for(int i = x+direction.dirX, j = y+direction.dirY; Board.canPlayOn(i, j); i+=direction.dirX, j+=direction.dirY) {
+								for(int i = x + direction.dirX, j = y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
 									if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(i,j) == player.getColor() && squares.contains(point)) {
+										if(this.board.getPiece(i,j) == player.getColor() && !squares.contains(point)) {
 											squares.add(point);
 										}
 										continue dir;

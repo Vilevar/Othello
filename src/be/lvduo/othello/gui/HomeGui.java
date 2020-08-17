@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -54,7 +55,10 @@ public class HomeGui implements IGui {
 	}
 	
 	private Optional<GameOptions> createDialog() {
-		Dialog<GameOptions> game;
-		return Optional.of(this.gameOptions);
+		Dialog<GameOptions> game = new Dialog<>();
+	//	game.setGraphic(new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/game-options.jpg"))));
+	//	game.setHeaderText(null);
+		
+		return Optional.of(this.gameOptions); //game.showAndWait();
 	}
 }
