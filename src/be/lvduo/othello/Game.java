@@ -7,7 +7,6 @@ import java.util.List;
 
 import be.lvduo.othello.player.Player;
 
-
 public class Game {
 
 	private Board board = new Board();
@@ -16,6 +15,7 @@ public class Game {
 	private Player player2;
 	
 	private Player current;
+	private HashMap<Point, List<Directions>> availableShots;
 	
 	private boolean isOver;
 	
@@ -27,22 +27,15 @@ public class Game {
 		this.player2 = player2;
 		
 		this.current = this.player1;
+		
 	}
 	
-	public void play(Player player, Point shot) {
-		if(player != this.current)
-			return;
-		
-		HashMap<Point, List<Directions>> availableShots;
-		if(this.board.getPiece(shot) == Piece.BLANK && (availableShots = this.getPossiblesShots(player)).containsKey(shot)) {
-			this.board.setPiece(player.getColor(), shot);
-			this.togglePiece(player, shot, availableShots.get(shot));
-			this.toggleCurrent();
+	public void play(Point shot) {
+		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(this.current).containsKey(shot)) {
+			this.togglePiece(shot, this.availableShots.get(shot));
 			
-			if(this.getPossiblesShots(this.current).isEmpty()) {
-				if(this.getPossiblesShots(this.current = player).isEmpty())
-					this.gameOver();
-			}
+			if(this.getPossiblesShots(this.toggleCurrent()).isEmpty() && this.getPossiblesShots(this.toggleCurrent()).isEmpty())
+				this.gameOver();
 		}		
 	}
 	
@@ -55,27 +48,29 @@ public class Game {
 		// TODO Other things
 	}
 	
-	private void togglePiece(Player player, Point point, List<Directions> directions) {
-		this.board.setPiece(player.getColor(), point);
+	private void togglePiece(Point point, List<Directions> directions) {
+		this.board.setPiece(this.current.getColor(), point);
 		for(Directions dir : directions) {
-			for(Point copy = new Point(point.x + dir.dirX, point.y + dir.dirY); this.board.getPiece(copy) != player.getColor();
+			for(Point copy = new Point(point.x + dir.dirX, point.y + dir.dirY); this.board.getPiece(copy) != this.current.getColor();
 					copy = new Point(copy.x + dir.dirX, copy.y + dir.dirY)) {
-				this.board.setPiece(player.getColor(), copy);
+				this.board.setPiece(this.current.getColor(), copy);
 			}
 		}
 	}
 	
 	public HashMap<Point, List<Directions>> getPossiblesShots(Player player) {
+		if(this.availableShots != null)
+			return this.availableShots;
 		HashMap<Point, List<Directions>> squares = new HashMap<>();
 		for(int y = 0; y < Board.HEIGHT; y++) {
 			for(int x = 0; x < Board.WIDTH; x++) {
-				if(Board.canPlayOn(x, y)) {
+				if(Board.isInBoard(x, y)) {
 					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
 		
 						dir: for(Directions direction : Directions.values()) {
 							Point point = new Point(x - direction.dirX, y - direction.dirY);
 							if(this.board.getPiece(point) == Piece.BLANK) {
-								for(int i = x + direction.dirX, j = y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
+								for(int i = x + direction.dirX, j = y + direction.dirY; Board.isInBoard(i, j); i += direction.dirX, j += direction.dirY) {
 									if(this.board.getPiece(i, j) != player.getColor().getOpposite()) {
 										if(this.board.getPiece(i, j) == player.getColor()) {
 											List<Directions> availableDirections = squares.getOrDefault(point, new ArrayList<>());
@@ -92,7 +87,7 @@ public class Game {
 			}
 		}
 		
-		return squares;
+		return this.availableShots = squares;
 	}
 	
 	public Player toggleCurrent() {
@@ -103,6 +98,7 @@ public class Game {
 		} else {
 			this.current = this.player1;
 		}
+		this.availableShots = null;
 		return this.current;
 	}
 	

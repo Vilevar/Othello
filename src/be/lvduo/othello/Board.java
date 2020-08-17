@@ -40,20 +40,17 @@ public class Board implements Cloneable {
 	}
 	
 	public Piece getPiece(int x, int y) {
-		if(!canPlayOn(x, y))
+		if(!isInBoard(x, y))
 			return Piece.UNDIFINED;
 		return this.board[y][x];
 	}
 	
-	public static boolean canPlayOn(Point pt) {
-		return canPlayOn(pt.x, pt.y);
+	public static boolean isInBoard(Point pt) {
+		return isInBoard(pt.x, pt.y);
 	}
 	
-	public static boolean canPlayOn(int x, int y) {
-		if(x < 0 || x > WIDTH || y < 0 || y > HEIGHT)
-			return false;
-		// TODO test the game rules
-		return true;
+	public static boolean isInBoard(int x, int y) {
+		return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;
 	}
 	
 	public Board clone() {

@@ -145,7 +145,7 @@ public class BoardGui implements IGui {
 
 	private void testPosition(double x, double y) {
 		Point pt;
-		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
+		if(this.game.getCurrent().isHuman() && Board.isInBoard(pt = this.convertToPoint(x, y))) {
 			this.lastTest = this.drawOn(pt, this.lastTest);
 			if(!this.possibleShots.containsKey(pt)) {
 				this.lastTest.setFill(this.badPosition);
@@ -161,8 +161,8 @@ public class BoardGui implements IGui {
 			this.lastTest = null;
 		}
 		Point pt;
-		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y)) && this.possibleShots.containsKey(pt)) {
-			this.game.play(this.game.getCurrent(), pt);
+		if(this.game.getCurrent().isHuman() && Board.isInBoard(pt = this.convertToPoint(x, y)) && this.possibleShots.containsKey(pt)) {
+			this.game.play(pt);
 			this.update();
 			while(!game.getCurrent().isHuman() && !this.game.isOver()) {
 				this.game.getCurrent().play(this.game.getBoard());
