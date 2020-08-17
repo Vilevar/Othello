@@ -30,7 +30,7 @@ public class Game {
 	}
 	
 	public void play(Point shot) {
-		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(this.current).containsKey(shot)) {
+		if(this.getPossiblesShots(this.current).containsKey(shot)) {
 			this.board.togglePieces(shot, this.current.getColor(), this.getPossiblesShots(this.current).get(shot));
 			if(this.getPossiblesShots(this.toggleCurrent()).isEmpty() && this.getPossiblesShots(this.toggleCurrent()).isEmpty())
 				this.gameOver();

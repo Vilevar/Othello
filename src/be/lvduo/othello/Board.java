@@ -77,6 +77,22 @@ public class Board implements Cloneable {
 		return squares;
 	}
 	
+	public boolean isDone() {
+		return getPossibilities(Piece.BLACK_PIECE).isEmpty() && getPossibilities(Piece.WHITE_PIECE).isEmpty();
+	}
+	
+	public int getNPieces(Piece color) {
+		int n = 0;
+		for(int x = 0; x < WIDTH; x++) {
+			for(int y = 0; y < HEIGHT; y++) {
+				if(this.getPiece(x, y) == color) {
+					n += 1;
+				}
+			}
+		}
+		return n;
+	}
+	
 	public void togglePieces(Point point, Piece color, List<Direction> directions) {
 		this.setPiece(color, point);
 		for(Direction dir : directions) {
@@ -102,6 +118,22 @@ public class Board implements Cloneable {
 		}
 		return other;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder("[");
+		for(int y = 1; y <= HEIGHT; y++) {
+			str.append(Arrays.toString(this.board[HEIGHT - y])).append(y == HEIGHT ? "]" : ", ");
+		}
+		return str.toString();
+	}
 
+	public String toProperString() {
+		StringBuilder str = new StringBuilder("[");
+		for(int y = 1; y <= HEIGHT; y++) {
+			str.append(Arrays.toString(this.board[HEIGHT - y])).append(y == HEIGHT ? "]" : ",\n");
+		}
+		return str.toString();
+	}
 }
 

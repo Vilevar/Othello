@@ -8,6 +8,7 @@ import be.lvduo.othello.Board;
 import be.lvduo.othello.Game;
 import be.lvduo.othello.Main;
 import be.lvduo.othello.Piece;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -54,6 +55,8 @@ public class BoardGui implements IGui {
 	private ImagePattern badPosition = new ImagePattern(new Image(
 			Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/bad-position.png")));
 	private Circle currentPlayer;
+	
+	private Timer timer = new Timer();
 	
 	
 	public BoardGui(GameOptions options) {
@@ -160,7 +163,7 @@ public class BoardGui implements IGui {
 				ctx.setFill(this.game.getPlayer(winner).getColor().getColor());
 				ctx.fillText("The player "+(winner + 1)+" won !", this.currentPlayer.getCenterX(), this.currentPlayer.getCenterY());
 			}
-			new Timer().schedule(new TimerTask() {
+			this.timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					HomeGui.HOME.setScene(stage);
@@ -197,10 +200,22 @@ public class BoardGui implements IGui {
 				.containsKey(pt) && !this.game.isOver()) {
 			this.game.play(pt);
 			this.update();
-			while(!game.getCurrent().isHuman() && !this.game.isOver()) {
-				this.game.getCurrent().play(this.game.getBoard());
-				this.update();
-			}
+			this.tryToPlayOther();
+		}
+	}
+	
+	private void tryToPlayOther() {
+		if(!game.getCurrent().isHuman() && !this.game.isOver()) {
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					Platform.runLater(() -> {
+						BoardGui.this.game.play(BoardGui.this.game.getCurrent().play(BoardGui.this.game.getBoard()));
+						BoardGui.this.update();
+						BoardGui.this.tryToPlayOther();
+					});
+				}
+			}, 2000);
 		}
 	}
 	
