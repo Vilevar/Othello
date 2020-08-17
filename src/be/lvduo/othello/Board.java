@@ -1,8 +1,9 @@
 package be.lvduo.othello;
 
 import java.awt.Point;
+import java.util.Arrays;
 
-public class Board {
+public class Board implements Cloneable {
 	
 	public final static int WIDTH = 8;
 	public final static int HEIGHT = 8;
@@ -53,6 +54,14 @@ public class Board {
 			return false;
 		// TODO test the game rules
 		return true;
+	}
+	
+	public Board clone() {
+		Board other = new Board();
+		for(int i = 0; i < other.board.length; i++) {
+			other.board[i] = Arrays.copyOf(this.board[i], this.board[i].length);
+		}
+		return other;
 	}
 
 }

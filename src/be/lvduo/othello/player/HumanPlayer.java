@@ -1,5 +1,6 @@
 package be.lvduo.othello.player;
 
+import be.lvduo.othello.Board;
 import be.lvduo.othello.Piece;
 
 public class HumanPlayer implements Player {
@@ -19,6 +20,11 @@ public class HumanPlayer implements Player {
 	@Override
 	public Piece getColor() {
 		return color;
+	}
+
+	@Override
+	public void play(Board board) {
+		// Do nothing
 	}
 	
 

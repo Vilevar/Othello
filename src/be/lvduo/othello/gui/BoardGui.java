@@ -42,8 +42,10 @@ public class BoardGui implements IGui {
 	
 	private Circle[] pieces = new Circle[Board.WIDTH * Board.HEIGHT];
 	private Circle lastTest;
-	private Image goodPosition = new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/good-position.png"));
-	private Image badPosition = new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/bad-position.png"));
+	private ImagePattern goodPosition = new ImagePattern(new Image(
+			Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/good-position.png")));
+	private ImagePattern badPosition = new ImagePattern(new Image(
+			Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/bad-position.png")));
 	
 	
 	public BoardGui(GameOptions options) {
@@ -143,9 +145,9 @@ public class BoardGui implements IGui {
 		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
 			this.lastTest = this.drawOn(pt, this.lastTest);
 			if(!this.possibleShots.contains(pt)) {
-				this.lastTest.setFill(new ImagePattern(this.badPosition));
+				this.lastTest.setFill(this.badPosition);
 			} else {
-				this.lastTest.setFill(new ImagePattern(this.goodPosition));
+				this.lastTest.setFill(this.goodPosition);
 			}
 		}
 	}
@@ -159,9 +161,10 @@ public class BoardGui implements IGui {
 		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y)) && this.possibleShots.contains(pt)) {
 			this.game.play(this.game.getCurrent(), pt);
 			this.update();
-			System.out.println("onAction");
-			
-			
+			while(!game.getCurrent().isHuman() && !this.game.isOver()) {
+				this.game.getCurrent().play(this.game.getBoard());
+				this.update();
+			}
 		}
 	}
 	
