@@ -1,6 +1,6 @@
 package be.lvduo.othello;
 
-public enum Directions {
+public enum Direction {
 	
 	LEFT(-1,0),
 	RIGHT(1,0),
@@ -14,7 +14,7 @@ public enum Directions {
 	public final int dirX;
 	public final int dirY;
 	
-	Directions(int x, int y) {
+	Direction(int x, int y) {
 		this.dirX = x;
 		this.dirY = y;
 	}

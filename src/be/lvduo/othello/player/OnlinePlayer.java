@@ -1,5 +1,7 @@
 package be.lvduo.othello.player;
 
+import java.awt.Point;
+
 import be.lvduo.othello.Board;
 import be.lvduo.othello.Piece;
 
@@ -21,9 +23,8 @@ public class OnlinePlayer implements Player {
 	}
 
 	@Override
-	public void play(Board board) {
-		// TODO Auto-generated method stub
-		
+	public Point play(Board board) {
+		return null;
 	}
 
 }

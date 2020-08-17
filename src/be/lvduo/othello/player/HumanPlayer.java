@@ -1,5 +1,7 @@
 package be.lvduo.othello.player;
 
+import java.awt.Point;
+
 import be.lvduo.othello.Board;
 import be.lvduo.othello.Piece;
 
@@ -27,8 +29,8 @@ public class HumanPlayer implements Player {
 	}
 
 	@Override
-	public void play(Board board) {
-		// Do nothing
+	public Point play(Board board) {
+		return null;
 	}
 	
 

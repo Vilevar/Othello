@@ -1,7 +1,6 @@
 package be.lvduo.othello;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class Game {
 	private Player player2;
 	
 	private Player current;
-	private HashMap<Point, List<Directions>> availableShots;
+	private HashMap<Point, List<Direction>> availableShots;
 	
 	private int winner = -1;
 	
@@ -32,8 +31,7 @@ public class Game {
 	
 	public void play(Point shot) {
 		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(this.current).containsKey(shot)) {
-			this.togglePiece(shot, this.availableShots.get(shot));
-			
+			this.board.togglePieces(shot, this.current.getColor(), this.getPossiblesShots(this.current).get(shot));
 			if(this.getPossiblesShots(this.toggleCurrent()).isEmpty() && this.getPossiblesShots(this.toggleCurrent()).isEmpty())
 				this.gameOver();
 		}		
@@ -69,46 +67,10 @@ public class Game {
 		return winner;
 	}
 	
-	private void togglePiece(Point point, List<Directions> directions) {
-		this.board.setPiece(this.current.getColor(), point);
-		for(Directions dir : directions) {
-			for(Point copy = new Point(point.x + dir.dirX, point.y + dir.dirY); this.board.getPiece(copy) != this.current.getColor();
-					copy = new Point(copy.x + dir.dirX, copy.y + dir.dirY)) {
-				this.board.setPiece(this.current.getColor(), copy);
-			}
-		}
-	}
-	
-	public HashMap<Point, List<Directions>> getPossiblesShots(Player player) {
+	public HashMap<Point, List<Direction>> getPossiblesShots(Player player) {
 		if(this.availableShots != null)
 			return this.availableShots;
-		HashMap<Point, List<Directions>> squares = new HashMap<>();
-		for(int y = 0; y < Board.HEIGHT; y++) {
-			for(int x = 0; x < Board.WIDTH; x++) {
-				if(Board.isInBoard(x, y)) {
-					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
-		
-						dir: for(Directions direction : Directions.values()) {
-							Point point = new Point(x - direction.dirX, y - direction.dirY);
-							if(this.board.getPiece(point) == Piece.BLANK) {
-								for(int i = x + direction.dirX, j = y + direction.dirY; Board.isInBoard(i, j); i += direction.dirX, j += direction.dirY) {
-									if(this.board.getPiece(i, j) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(i, j) == player.getColor()) {
-											List<Directions> availableDirections = squares.getOrDefault(point, new ArrayList<>());
-											availableDirections.add(direction);
-											squares.put(point, availableDirections);
-										}
-										continue dir;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		return this.availableShots = squares;
+		return this.availableShots = this.board.getPossibilities(player.getColor());
 	}
 	
 	public Player toggleCurrent() {

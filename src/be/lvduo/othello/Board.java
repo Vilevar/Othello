@@ -1,7 +1,10 @@
 package be.lvduo.othello;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Board implements Cloneable {
 	
@@ -43,6 +46,45 @@ public class Board implements Cloneable {
 		if(!isInBoard(x, y))
 			return Piece.UNDIFINED;
 		return this.board[y][x];
+	}
+	
+	public HashMap<Point, List<Direction>> getPossibilities(Piece color) {
+		HashMap<Point, List<Direction>> squares = new HashMap<>();
+		for(int y = 0; y < Board.HEIGHT; y++) {
+			for(int x = 0; x < Board.WIDTH; x++) {
+				if(Board.isInBoard(x, y)) {
+					if(this.getPiece(x, y) == color.getOpposite()) {
+		
+						dir: for(Direction direction : Direction.values()) {
+							Point point = new Point(x - direction.dirX, y - direction.dirY);
+							if(this.getPiece(point) == Piece.BLANK) {
+								for(int i = x + direction.dirX, j = y + direction.dirY; isInBoard(i, j); i += direction.dirX, j += direction.dirY) {
+									if(this.getPiece(i, j) != color.getOpposite()) {
+										if(this.getPiece(i, j) == color) {
+											List<Direction> availableDirections = squares.getOrDefault(point, new ArrayList<>());
+											availableDirections.add(direction);
+											squares.put(point, availableDirections);
+										}
+										continue dir;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return squares;
+	}
+	
+	public void togglePieces(Point point, Piece color, List<Direction> directions) {
+		this.setPiece(color, point);
+		for(Direction dir : directions) {
+			for(Point copy = new Point(point.x + dir.dirX, point.y + dir.dirY); this.getPiece(copy) != color; 
+					copy = new Point(copy.x + dir.dirX, copy.y + dir.dirY)) {
+				this.setPiece(color, copy);
+			}
+		}
 	}
 	
 	public static boolean isInBoard(Point pt) {
