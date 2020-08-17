@@ -8,7 +8,7 @@ import be.lvduo.othello.player.Player;
 
 public class Game {
 
-	private Board board;
+	private Board board = new Board();
 	
 	private Player black;
 	private Player white;

@@ -5,6 +5,6 @@ import be.lvduo.othello.Game;
 public class GameOptions {
 
 	public Game toGame() {
-		return null;
+		return new Game();
 	}
 }

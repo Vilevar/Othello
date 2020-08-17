@@ -2,11 +2,13 @@ package be.lvduo.othello.gui;
 
 import be.lvduo.othello.Board;
 import be.lvduo.othello.Game;
+import be.lvduo.othello.Piece;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class BoardGui implements IGui {
@@ -16,6 +18,7 @@ public class BoardGui implements IGui {
 	private static final double MARGIN = 5;
 	private static final double WIDTH = 2*MARGIN + SQUARE_SIZE*Board.WIDTH;
 	private static final double HEIGHT = 2*BENCH_SIZE+ SQUARE_SIZE*Board.HEIGHT;
+	private static final double CIRCLE_RADIUS = (SQUARE_SIZE/2) - 10;
 	
 	private Game game;
 	private Scene scene;
@@ -23,11 +26,15 @@ public class BoardGui implements IGui {
 	private Canvas canvas;
 	private Group group;
 	
+	private Circle[] pieces = new Circle[Board.WIDTH * Board.HEIGHT];
+	
 	public BoardGui(GameOptions options) {
 		this.game = options.toGame();
 		
 		this.scene = new Scene(group = new Group(canvas = new Canvas(WIDTH, HEIGHT)), WIDTH, HEIGHT);
 		this.drawBackground();
+		this.game.getBoard().createBoard();
+		this.update();
 	}
 	
 	
@@ -78,6 +85,23 @@ public class BoardGui implements IGui {
 		ctx.fillOval(xCircleRightPos, yCircleAbovePos, circleDiam, circleDiam);
 		ctx.fillOval(xCircleLeftPos, yCircleBelowPos, circleDiam, circleDiam);
 		ctx.fillOval(xCircleRightPos, yCircleBelowPos, circleDiam, circleDiam);
+	}
+	
+	public void update() {
+		for(int x = 0; x < Board.WIDTH; x++) {
+			for(int y = 0; y < Board.HEIGHT; y++) {
+				int index = x*Board.WIDTH + y;
+				Piece piece = this.game.getBoard().getPiece(x, y);
+				if(piece.isPiece()) {
+					Circle circle = this.pieces[index];
+					if(circle == null) {
+						circle = this.pieces[index] = new Circle(MARGIN + (x+.5)*SQUARE_SIZE, BENCH_SIZE + (y+.5)*SQUARE_SIZE, CIRCLE_RADIUS);
+						this.group.getChildren().add(circle);
+					}
+					circle.setFill(piece.getColor());
+				}
+			}
+		}
 	}
 	
 	

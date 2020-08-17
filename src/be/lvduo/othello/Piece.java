@@ -1,10 +1,24 @@
 package be.lvduo.othello;
 
+import javafx.scene.paint.Color;
+
 public enum Piece {
 	
-	UNDIFINED,
-	BLANK,
-	WHITE_PIECE,
-	BLACK_PIECE;
+	UNDIFINED(null),
+	BLANK(null),
+	WHITE_PIECE(Color.WHITE),
+	BLACK_PIECE(Color.BLACK);
 
+	private Color color;
+	Piece(Color color) {
+		this.color = color;
+	}
+	
+	public boolean isPiece() {
+		return color != null;
+	}
+	
+	public Color getColor() {
+		return color;
+	}
 }
