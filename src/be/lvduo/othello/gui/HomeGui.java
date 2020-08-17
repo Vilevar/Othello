@@ -6,6 +6,7 @@ import be.lvduo.othello.Main;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +15,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -56,9 +58,17 @@ public class HomeGui implements IGui {
 	
 	private Optional<GameOptions> createDialog() {
 		Dialog<GameOptions> game = new Dialog<>();
-	//	game.setGraphic(new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/game-options.jpg"))));
-	//	game.setHeaderText(null);
+		game.setGraphic(new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/game-options.jpg"))));
+		game.setHeaderText("Chose the options for your new game");
+		game.setTitle("Game options");
+		game.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 		
-		return Optional.of(this.gameOptions); //game.showAndWait();
+		
+		
+		VBox base = new VBox();
+		
+		game.getDialogPane().setContent(base);
+		game.setResultConverter(buttonType -> buttonType == ButtonType.CANCEL ? null : this.gameOptions);
+		return game.showAndWait();
 	}
 }

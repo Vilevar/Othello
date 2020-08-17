@@ -2,6 +2,7 @@ package be.lvduo.othello;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import be.lvduo.othello.player.Player;
@@ -32,9 +33,10 @@ public class Game {
 		if(player != this.current)
 			return;
 		
-		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(player).contains(shot)) {
+		HashMap<Point, List<Directions>> availableShots;
+		if(this.board.getPiece(shot) == Piece.BLANK && (availableShots = this.getPossiblesShots(player)).containsKey(shot)) {
 			this.board.setPiece(player.getColor(), shot);
-			this.togglePiece(player, shot);
+			this.togglePiece(player, shot, availableShots.get(shot));
 			this.toggleCurrent();
 			
 			if(this.getPossiblesShots(this.current).isEmpty()) {
@@ -53,42 +55,18 @@ public class Game {
 		// TODO Other things
 	}
 	
-	private void togglePiece(Player player, Point point) {
-		
-		List<Directions> directions = new ArrayList<>();
-		
-		dir: for(Directions direction : Directions.values()) {
-			
-			if(this.board.getPiece(point) == Piece.BLANK) {
-				for(int i = point.x + direction.dirX, j = point.y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
-					if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
-						if(this.board.getPiece(i,j) == player.getColor()) {
-							directions.add(direction);
-						}
-						continue dir;
-					}
-				}
+	private void togglePiece(Player player, Point point, List<Directions> directions) {
+		this.board.setPiece(player.getColor(), point);
+		for(Directions dir : directions) {
+			for(Point copy = new Point(point.x + dir.dirX, point.y + dir.dirY); this.board.getPiece(copy) != player.getColor();
+					copy = new Point(copy.x + dir.dirX, copy.y + dir.dirY)) {
+				this.board.setPiece(player.getColor(), copy);
 			}
 		}
-		
-		dir: for(Directions direction : directions) {
-			
-			if(this.board.getPiece(point) == Piece.BLANK) {
-				for(int i = point.x + direction.dirX, j = point.y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
-					if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
-						if(this.board.getPiece(i,j) == player.getColor()) {
-							continue dir;
-						}
-						this.board.setPiece(player.getColor(), i, j);
-					}
-				}
-			}
-		}
-		
 	}
 	
-	public List<Point> getPossiblesShots(Player player) {
-		List<Point> squares = new ArrayList<>();
+	public HashMap<Point, List<Directions>> getPossiblesShots(Player player) {
+		HashMap<Point, List<Directions>> squares = new HashMap<>();
 		for(int y = 0; y < Board.HEIGHT; y++) {
 			for(int x = 0; x < Board.WIDTH; x++) {
 				if(Board.canPlayOn(x, y)) {
@@ -96,101 +74,19 @@ public class Game {
 		
 						dir: for(Directions direction : Directions.values()) {
 							Point point = new Point(x - direction.dirX, y - direction.dirY);
-							
 							if(this.board.getPiece(point) == Piece.BLANK) {
 								for(int i = x + direction.dirX, j = y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
-									if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(i,j) == player.getColor() && !squares.contains(point)) {
-											squares.add(point);
+									if(this.board.getPiece(i, j) != player.getColor().getOpposite()) {
+										if(this.board.getPiece(i, j) == player.getColor()) {
+											List<Directions> availableDirections = squares.getOrDefault(point, new ArrayList<>());
+											availableDirections.add(direction);
+											squares.put(point, availableDirections);
 										}
 										continue dir;
 									}
 								}
 							}
-							
 						}
-						/*
-						left: if(this.board.getPiece(x - 1, y) == Piece.BLANK) {
-							for(int i = x + 1; i < Board.WIDTH; i++) {
-								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(i, y) == player.getColor() && !squares.contains(new Point(x-1, y))) {
-										squares.add(new Point(x-1, y));
-									}
-									break left;
-								}
-							}
-						}
-						right: if(this.board.getPiece(x + 1, y) == Piece.BLANK) {
-							for(int i = x - 1; i >= 0; i--) {
-								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(i, y) == player.getColor() && !squares.contains(new Point(x + 1, y))) {
-										squares.add(new Point(x+1, y));
-									}
-									break right;
-								}
-							}
-						}
-						down: if(this.board.getPiece(x, y - 1) == Piece.BLANK) {
-							for(int i = y + 1; i < Board.HEIGHT; i++) {
-								if(this.board.getPiece(x, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(x, i) == player.getColor() && !squares.contains(new Point(x, y - 1))) {
-										squares.add(new Point(x, y - 1));
-									}
-									break down;
-								}
-							}
-						}
-						up: if(this.board.getPiece(x, y + 1) == Piece.BLANK) {
-							for(int i = y - 1; i >= 0; i--) {
-								if(this.board.getPiece(x, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(x, i) == player.getColor() && !squares.contains(new Point(x, y + 1))) {
-										squares.add(new Point(x, y + 1));
-									}
-									break up;
-								}
-							}
-						}
-						down_left: if(this.board.getPiece(x - 1, y - 1) == Piece.BLANK) {
-							for(int i = x + 1, j = y + 1; i < Board.WIDTH && j < Board.HEIGHT; i++, j++) {
-								if(this.board.getPiece(i, j) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(i, j) == player.getColor() && !squares.contains(new Point(x - 1, y - 1))) {
-										squares.add(new Point(x - 1, y - 1));
-									}
-									break down_left;
-								}
-							}
-						}
-						down_right: if(this.board.getPiece(x+1, y-1) == Piece.BLANK) {
-							for(int i = y+1, j = x-1; i < (Board.HEIGHT) && j >= 0; i++, j--) {
-								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y-1))) {
-										squares.add(new Point(x+1, y-1));
-									}
-									break down_right;
-								}
-							}
-						}
-						up_left:if(this.board.getPiece(x-1, y+1) == Piece.BLANK) {
-							for(int i = y-1, j = x+1; i >= 0 && j < (Board.WIDTH); i--, j++) {
-								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x-1, y+1))) {
-										squares.add(new Point(x-1, y+1));
-									}
-									break up_left;
-								}
-							}
-						}
-						up_right: if(this.board.getPiece(x+1, y+1) == Piece.BLANK) {
-							for(int i = y-1, j = x-1; i >= 0 && j >= 0; i--, j--) {
-								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y+1))) {
-										squares.add(new Point(x+1, y+1));
-									}
-									break up_right;
-								}
-							}
-						}
-						*/
 					}
 				}
 			}
@@ -199,7 +95,7 @@ public class Game {
 		return squares;
 	}
 	
-	public void toggleCurrent() {
+	public Player toggleCurrent() {
 		if(this.current == this.player1) {
 			this.current = this.player2;
 		} else if(this.current == this.player2) {
@@ -207,6 +103,7 @@ public class Game {
 		} else {
 			this.current = this.player1;
 		}
+		return this.current;
 	}
 	
 	public Player getCurrent() {

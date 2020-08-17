@@ -1,9 +1,11 @@
 package be.lvduo.othello.gui;
 
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.List;
 
 import be.lvduo.othello.Board;
+import be.lvduo.othello.Directions;
 import be.lvduo.othello.Game;
 import be.lvduo.othello.Main;
 import be.lvduo.othello.Piece;
@@ -35,7 +37,7 @@ public class BoardGui implements IGui {
 	
 	private Game game;
 	private Scene scene;
-	private List<Point> possibleShots;
+	private HashMap<Point, List<Directions>> possibleShots;
 	
 	private Canvas canvas;
 	private Group group;
@@ -121,6 +123,7 @@ public class BoardGui implements IGui {
 			for(int y = 0; y < Board.HEIGHT; y++) {
 				int index = x*Board.WIDTH + y;
 				Piece piece = this.game.getBoard().getPiece(x, y);
+			//	System.out.println("");
 				if(piece.isPiece()) {
 					Circle circle = this.pieces[index];
 					if(circle == null) {
@@ -144,7 +147,7 @@ public class BoardGui implements IGui {
 		Point pt;
 		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
 			this.lastTest = this.drawOn(pt, this.lastTest);
-			if(!this.possibleShots.contains(pt)) {
+			if(!this.possibleShots.containsKey(pt)) {
 				this.lastTest.setFill(this.badPosition);
 			} else {
 				this.lastTest.setFill(this.goodPosition);
@@ -158,7 +161,7 @@ public class BoardGui implements IGui {
 			this.lastTest = null;
 		}
 		Point pt;
-		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y)) && this.possibleShots.contains(pt)) {
+		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y)) && this.possibleShots.containsKey(pt)) {
 			this.game.play(this.game.getCurrent(), pt);
 			this.update();
 			while(!game.getCurrent().isHuman() && !this.game.isOver()) {
