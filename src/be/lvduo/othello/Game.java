@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.lvduo.othello.player.Player;
-import be.lvduo.othello.Directions.*;
 
 
 public class Game {
@@ -35,6 +34,7 @@ public class Game {
 		
 		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(player).contains(shot)) {
 			this.board.setPiece(player.getColor(), shot);
+			this.togglePiece(player, shot);
 			this.toggleCurrent();
 			
 			if(this.getPossiblesShots(this.current).isEmpty()) {
@@ -51,6 +51,40 @@ public class Game {
 	public void gameOver() {
 		this.isOver = true;
 		// TODO Other things
+	}
+	
+	private void togglePiece(Player player, Point point) {
+		
+		List<Directions> directions = new ArrayList<>();
+		
+		dir: for(Directions direction : Directions.values()) {
+			
+			if(this.board.getPiece(point) == Piece.BLANK) {
+				for(int i = point.x + direction.dirX, j = point.y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
+					if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
+						if(this.board.getPiece(i,j) == player.getColor()) {
+							directions.add(direction);
+						}
+						continue dir;
+					}
+				}
+			}
+		}
+		
+		dir: for(Directions direction : directions) {
+			
+			if(this.board.getPiece(point) == Piece.BLANK) {
+				for(int i = point.x + direction.dirX, j = point.y + direction.dirY; Board.canPlayOn(i, j); i += direction.dirX, j += direction.dirY) {
+					if(this.board.getPiece(i,j) != player.getColor().getOpposite()) {
+						if(this.board.getPiece(i,j) == player.getColor()) {
+							continue dir;
+						}
+						this.board.setPiece(player.getColor(), i, j);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	public List<Point> getPossiblesShots(Player player) {
