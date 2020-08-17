@@ -28,7 +28,7 @@ public class Game {
 		
 	}
 	
-	private List<Point> getPossiblesShots(Player player) {
+	public List<Point> getPossiblesShots(Player player) {
 		List<Point> squares = new ArrayList<>();
 		for(int y = 0; y < Board.HEIGHT; y++) {
 			for(int x = 0; x < Board.WIDTH; x++) {
