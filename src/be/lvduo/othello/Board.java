@@ -1,5 +1,7 @@
 package be.lvduo.othello;
 
+import java.awt.Point;
+
 public class Board {
 	
 	public final static int WIDTH = 8;
@@ -19,10 +21,10 @@ public class Board {
 	}
 	
 	public void createBoard() {
-		this.setPiece(Piece.WHITE_PIECE, (WIDTH/2) - 1, (HEIGHT/2) - 1);
-		this.setPiece(Piece.WHITE_PIECE, WIDTH/2, HEIGHT/2);
-		this.setPiece(Piece.BLACK_PIECE, (WIDTH/2) - 1, HEIGHT/2);
-		this.setPiece(Piece.BLACK_PIECE, WIDTH/2, (HEIGHT/2) - 1);
+		this.setPiece(Piece.BLACK_PIECE, (WIDTH/2) - 1, (HEIGHT/2) - 1);
+		this.setPiece(Piece.BLACK_PIECE, WIDTH/2, HEIGHT/2);
+		this.setPiece(Piece.WHITE_PIECE, (WIDTH/2) - 1, HEIGHT/2);
+		this.setPiece(Piece.WHITE_PIECE, WIDTH/2, (HEIGHT/2) - 1);
 	}
 	
 	public void setPiece(Piece piece, int x, int y) {
@@ -34,6 +36,10 @@ public class Board {
 			y < 0 || y > HEIGHT)
 			return Piece.UNDIFINED;
 		return this.board[y][x];
+	}
+	
+	public static boolean canPlayOn(Point pt) {
+		return canPlayOn(pt.x, pt.y);
 	}
 	
 	public static boolean canPlayOn(int x, int y) {

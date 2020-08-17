@@ -1,12 +1,23 @@
 package be.lvduo.othello.gui;
 
+import java.awt.Point;
+
 import be.lvduo.othello.Board;
 import be.lvduo.othello.Game;
+import be.lvduo.othello.Main;
 import be.lvduo.othello.Piece;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -31,10 +42,21 @@ public class BoardGui implements IGui {
 	public BoardGui(GameOptions options) {
 		this.game = options.toGame();
 		
-		this.scene = new Scene(group = new Group(canvas = new Canvas(WIDTH, HEIGHT)), WIDTH, HEIGHT);
+		Button b = new Button("", new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/control.png"))));
+		b.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
+		b.setOnAction(e -> System.out.println("Hoy"));
+		b.setOnMouseEntered(e -> this.scene.setCursor(Cursor.HAND));
+		b.setOnMouseExited(e -> this.scene.setCursor(Cursor.DEFAULT));
+		
+		this.scene = new Scene(group = new Group(canvas = new Canvas(WIDTH, HEIGHT), b), WIDTH, HEIGHT);
 		this.drawBackground();
 		this.game.getBoard().createBoard();
 		this.update();
+		
+		this.scene.setOnMouseDragged(e -> {
+			System.out.println(this.convertToPoint(e.getSceneX(), e.getSceneY()));
+		});
+		this.scene.setOnMouseReleased(e -> this.handleAction(e.getSceneX(), e.getSceneY()));
 	}
 	
 	
@@ -53,6 +75,7 @@ public class BoardGui implements IGui {
 			double xPos = MARGIN + x*SQUARE_SIZE;
 			ctx.strokeLine(xPos, BENCH_SIZE, xPos, HEIGHT - BENCH_SIZE);
 		}
+		// ICI
 		for(int y = 1; y < Board.HEIGHT; y++) {
 			double yPos = BENCH_SIZE + y*SQUARE_SIZE;
 			ctx.strokeLine(0 + MARGIN, yPos, WIDTH - MARGIN, yPos);
@@ -95,21 +118,37 @@ public class BoardGui implements IGui {
 				if(piece.isPiece()) {
 					Circle circle = this.pieces[index];
 					if(circle == null) {
-						circle = this.pieces[index] = new Circle(MARGIN + (x+.5)*SQUARE_SIZE, BENCH_SIZE + (y+.5)*SQUARE_SIZE, CIRCLE_RADIUS);
+						circle = this.pieces[index] = new Circle(
+								MARGIN + (x+.5)*SQUARE_SIZE, BENCH_SIZE + ((Board.HEIGHT - y)-.5)*SQUARE_SIZE, CIRCLE_RADIUS);
 						this.group.getChildren().add(circle);
+						circle.setFill(piece.getColor());
+					} else if(circle.getFill() != piece.getColor()) {	// it has changed of color
+						
 					}
-					circle.setFill(piece.getColor());
 				}
 			}
 		}
 	}
 	
 	
+	private void handleAction(double x, double y) {
+		Point pt;
+		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
+			
+			
+			
+			
+		}
+	}
 	
 	@Override
 	public void setScene(Stage stage) {
 		stage.setTitle("Othello - Game");
 		stage.setScene(scene);
+	}
+	
+	private Point convertToPoint(double x, double y) {
+		return new Point((int) ((x - MARGIN) / SQUARE_SIZE), (int) (Board.HEIGHT - ((y - BENCH_SIZE) / SQUARE_SIZE)));
 	}
 
 }

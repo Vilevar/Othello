@@ -19,6 +19,7 @@ public class Main extends Application {
 		});
 		HomeGui.HOME.setScene(stage);
 		stage.show();
+		stage.set
 	}
 
 }
