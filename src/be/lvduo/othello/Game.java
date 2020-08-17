@@ -2,7 +2,7 @@ package be.lvduo.othello;
 
 public class Game {
 
-	private Board board;
+	private Board board = new Board();
 	
 	public Board getBoard() {
 		return board;
