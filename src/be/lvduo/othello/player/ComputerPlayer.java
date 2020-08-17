@@ -1,5 +1,6 @@
 package be.lvduo.othello.player;
 
+import be.lvduo.othello.Board;
 import be.lvduo.othello.Piece;
 
 public class ComputerPlayer implements Player {
@@ -13,14 +14,18 @@ public class ComputerPlayer implements Player {
 
 	@Override
 	public boolean isHuman() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Piece getColor() {
-		// TODO Auto-generated method stub
 		return color;
+	}
+
+	@Override
+	public void play(Board board) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
