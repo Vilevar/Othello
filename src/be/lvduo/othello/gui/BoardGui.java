@@ -1,6 +1,7 @@
 package be.lvduo.othello.gui;
 
 import java.awt.Point;
+import java.util.List;
 
 import be.lvduo.othello.Board;
 import be.lvduo.othello.Game;
@@ -19,6 +20,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -33,18 +35,23 @@ public class BoardGui implements IGui {
 	
 	private Game game;
 	private Scene scene;
+	private List<Point> possibleShots;
 	
 	private Canvas canvas;
 	private Group group;
 	
 	private Circle[] pieces = new Circle[Board.WIDTH * Board.HEIGHT];
+	private Circle lastTest;
+	private Image goodPosition = new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/good-position.png"));
+	private Image badPosition = new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/bad-position.png"));
+	
 	
 	public BoardGui(GameOptions options) {
 		this.game = options.toGame();
 		
 		Button b = new Button("", new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/control.png"))));
 		b.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
-		b.setOnAction(e -> System.out.println("Hoy"));
+		b.setOnAction(e -> this.createControlPanel());
 		b.setOnMouseEntered(e -> this.scene.setCursor(Cursor.HAND));
 		b.setOnMouseExited(e -> this.scene.setCursor(Cursor.DEFAULT));
 		
@@ -73,7 +80,6 @@ public class BoardGui implements IGui {
 			double xPos = MARGIN + x*SQUARE_SIZE;
 			ctx.strokeLine(xPos, BENCH_SIZE, xPos, HEIGHT - BENCH_SIZE);
 		}
-		// ICI
 		for(int y = 1; y < Board.HEIGHT; y++) {
 			double yPos = BENCH_SIZE + y*SQUARE_SIZE;
 			ctx.strokeLine(0 + MARGIN, yPos, WIDTH - MARGIN, yPos);
@@ -116,28 +122,44 @@ public class BoardGui implements IGui {
 				if(piece.isPiece()) {
 					Circle circle = this.pieces[index];
 					if(circle == null) {
-						circle = this.pieces[index] = new Circle(
-								MARGIN + (x+.5)*SQUARE_SIZE, BENCH_SIZE + ((Board.HEIGHT - y)-.5)*SQUARE_SIZE, CIRCLE_RADIUS);
-						this.group.getChildren().add(circle);
+						circle = this.pieces[index] = this.drawOn(new Point(x, y), null);
 						circle.setFill(piece.getColor());
 					} else if(circle.getFill() != piece.getColor()) {	// it has changed of color
-						
+						circle.setFill(piece.getColor()); // TODO Animation
 					}
 				}
 			}
 		}
+		
+		this.possibleShots = this.game.getPossiblesShots(this.game.getCurrent());
 	}
 	
+	private void createControlPanel() {
+		
+	}
 
 	private void testPosition(double x, double y) {
-		
+		Point pt;
+		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
+			this.lastTest = this.drawOn(pt, this.lastTest);
+			if(!this.possibleShots.contains(pt)) {
+				this.lastTest.setFill(new ImagePattern(this.badPosition));
+			} else {
+				this.lastTest.setFill(new ImagePattern(this.goodPosition));
+			}
+		}
 	}
 	
 	private void handleAction(double x, double y) {
+		if(this.lastTest != null) {
+			this.group.getChildren().remove(this.lastTest);
+			this.lastTest = null;
+		}
 		Point pt;
-		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y))) {
-			
-			
+		if(this.game.getCurrent().isHuman() && Board.canPlayOn(pt = this.convertToPoint(x, y)) && this.possibleShots.contains(pt)) {
+			this.game.play(this.game.getCurrent(), pt);
+			this.update();
+			System.out.println("onAction");
 			
 			
 		}
@@ -152,5 +174,15 @@ public class BoardGui implements IGui {
 	private Point convertToPoint(double x, double y) {
 		return new Point((int) ((x - MARGIN) / SQUARE_SIZE), (int) (Board.HEIGHT - ((y - BENCH_SIZE) / SQUARE_SIZE)));
 	}
-
+	
+	public Circle drawOn(Point point, Circle circle) {
+		boolean add = circle == null;
+		if(add)
+			circle = new Circle(CIRCLE_RADIUS);
+		circle.setCenterX(MARGIN + (point.x+.5)*SQUARE_SIZE);
+		circle.setCenterY(BENCH_SIZE + (Board.HEIGHT - point.y -.5)*SQUARE_SIZE);
+		if(add)
+			this.group.getChildren().add(circle);
+		return circle;
+	}
 }

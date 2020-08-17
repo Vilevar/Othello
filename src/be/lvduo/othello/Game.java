@@ -15,6 +15,8 @@ public class Game {
 	
 	private Player current;
 	
+	private boolean isOver;
+	
 	
 	public Game(Player player1, Player player2) {
 		this.board = new Board();
@@ -33,15 +35,20 @@ public class Game {
 			this.board.setPiece(player.getColor(), shot);
 			this.toggleCurrent();
 			
-			if(getPossiblesShots(this.current).isEmpty()) {
-				if(getPossiblesShots(player).isEmpty()) this.gameOver();
+			if(this.getPossiblesShots(this.current).isEmpty()) {
+				if(this.getPossiblesShots(this.current = player).isEmpty())
+					this.gameOver();
 			}
 		}		
-		
+	}
+	
+	public boolean isOver() {
+		return isOver;
 	}
 	
 	public void gameOver() {
-		//TODO game over
+		this.isOver = true;
+		// TODO Other things
 	}
 	
 	public List<Point> getPossiblesShots(Player player) {
@@ -144,7 +151,9 @@ public class Game {
 			this.current = this.player2;
 		} else if(this.current == this.player2) {
 			this.current = this.player1;
-		} else this.current = this.player1;
+		} else {
+			this.current = this.player1;
+		}
 	}
 	
 	public Player getCurrent() {

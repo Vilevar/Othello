@@ -13,13 +13,11 @@ public class HumanPlayer implements Player {
 
 	@Override
 	public boolean isHuman() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public Piece getColor() {
-		// TODO Auto-generated method stub
 		return color;
 	}
 	
