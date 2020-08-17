@@ -3,6 +3,13 @@ package be.lvduo.othello.player;
 import be.lvduo.othello.Piece;
 
 public class HumanPlayer implements Player {
+	
+	private Piece color;
+
+	public HumanPlayer(Piece color) {
+		if(!color.isPiece()) throw new IllegalArgumentException("The color must be a piece not as "+color);
+		this.color = color;
+	}
 
 	@Override
 	public boolean isHuman() {
@@ -13,7 +20,7 @@ public class HumanPlayer implements Player {
 	@Override
 	public Piece getColor() {
 		// TODO Auto-generated method stub
-		return null;
+		return color;
 	}
 	
 

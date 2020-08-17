@@ -21,4 +21,12 @@ public enum Piece {
 	public Color getColor() {
 		return color;
 	}
+	
+	public Piece getOpposite() {
+		  switch(this) {
+		    case BLACK_PIECE: return WHITE_PIECE;
+		    case WHITE_PIECE: return BLACK_PIECE;
+		    default: return this;
+		  }
+		}
 }
