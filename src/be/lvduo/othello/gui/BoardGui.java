@@ -53,9 +53,7 @@ public class BoardGui implements IGui {
 		this.game.getBoard().createBoard();
 		this.update();
 		
-		this.scene.setOnMouseDragged(e -> {
-			System.out.println(this.convertToPoint(e.getSceneX(), e.getSceneY()));
-		});
+		this.scene.setOnMouseDragged(e -> this.testPosition(e.getSceneX(), e.getSceneY()));
 		this.scene.setOnMouseReleased(e -> this.handleAction(e.getSceneX(), e.getSceneY()));
 	}
 	
@@ -130,6 +128,10 @@ public class BoardGui implements IGui {
 		}
 	}
 	
+
+	private void testPosition(double x, double y) {
+		
+	}
 	
 	private void handleAction(double x, double y) {
 		Point pt;

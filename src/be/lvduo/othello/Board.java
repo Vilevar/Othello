@@ -39,8 +39,7 @@ public class Board {
 	}
 	
 	public Piece getPiece(int x, int y) {
-		if(x < 0 || x > WIDTH ||
-			y < 0 || y > HEIGHT)
+		if(!canPlayOn(x, y))
 			return Piece.UNDIFINED;
 		return this.board[y][x];
 	}

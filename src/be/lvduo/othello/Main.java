@@ -2,6 +2,7 @@ package be.lvduo.othello;
 
 import be.lvduo.othello.gui.HomeGui;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -19,7 +20,7 @@ public class Main extends Application {
 		});
 		HomeGui.HOME.setScene(stage);
 		stage.show();
-		stage.set
+		stage.getIcons().add(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/logo.png")));
 	}
 
 }

@@ -29,70 +29,66 @@ public class Game {
 	}
 	
 	private List<Point> getPossiblesShots(Player player) {
-		
 		List<Point> squares = new ArrayList<>();
 		for(int y = 0; y < Board.HEIGHT; y++) {
 			for(int x = 0; x < Board.WIDTH; x++) {
-				if(Board.canPlayOn(x, y))
+				if(Board.canPlayOn(x, y)) {
 					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
-						
-						left:if(this.board.getPiece(x-1, y) == Piece.BLANK) {
-							for(int i = x+1; i < (Board.WIDTH); i++) {
+						left: if(this.board.getPiece(x - 1, y) == Piece.BLANK) {
+							for(int i = x + 1; i < Board.WIDTH; i++) {
 								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(i, y) == player.getColor() && squares.contains(new Point(x-1, y))) {
+									if(this.board.getPiece(i, y) == player.getColor() && !squares.contains(new Point(x-1, y))) {
 										squares.add(new Point(x-1, y));
 									}
 									break left;
 								}
 							}
 						}
-						right:if(this.board.getPiece(x+1, y) == Piece.BLANK) {
-							for(int i = x-1; i >= 0; i--) {
+						right: if(this.board.getPiece(x + 1, y) == Piece.BLANK) {
+							for(int i = x - 1; i >= 0; i--) {
 								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(i, y) == player.getColor() && squares.contains(new Point(x+1, y))) {
+									if(this.board.getPiece(i, y) == player.getColor() && !squares.contains(new Point(x + 1, y))) {
 										squares.add(new Point(x+1, y));
 									}
 									break right;
 								}
 							}
 						}
-						down:if(this.board.getPiece(x, y-1) == Piece.BLANK) {
-							for(int i = y+1; i < (Board.HEIGHT); i++) {
+						down: if(this.board.getPiece(x, y - 1) == Piece.BLANK) {
+							for(int i = y + 1; i < Board.HEIGHT; i++) {
 								if(this.board.getPiece(x, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(x, i) == player.getColor() && squares.contains(new Point(x, y-1))) {
-										squares.add(new Point(x, y-1));
+									if(this.board.getPiece(x, i) == player.getColor() && !squares.contains(new Point(x, y - 1))) {
+										squares.add(new Point(x, y - 1));
 									}
 									break down;
 								}
 							}
 						}
-						up:if(this.board.getPiece(x, y+1) == Piece.BLANK) {
-							for(int i = y-1; i >= 0; i--) {
+						up: if(this.board.getPiece(x, y + 1) == Piece.BLANK) {
+							for(int i = y - 1; i >= 0; i--) {
 								if(this.board.getPiece(x, i) != player.getColor().getOpposite()) {
-									if(this.board.getPiece(x, i) == player.getColor() && squares.contains(new Point(x, y+1))) {
-										squares.add(new Point(x, y+1));
+									if(this.board.getPiece(x, i) == player.getColor() && !squares.contains(new Point(x, y + 1))) {
+										squares.add(new Point(x, y + 1));
 									}
 									break up;
 								}
 							}
 						}
-						down_left:if(this.board.getPiece(x-1, y-1) == Piece.BLANK) {
-							for(int i = y+1; i < (Board.HEIGHT); i++) {
-								for(int j = x+1; j < (Board.WIDTH);j++) {
-									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && squares.contains(new Point(x-1, y-1))) {
-											squares.add(new Point(x-1, y-1));
-										}
-										break down_left;
+						down_left: if(this.board.getPiece(x - 1, y - 1) == Piece.BLANK) {
+							for(int i = x + 1, j = y + 1; i < Board.WIDTH && j < Board.HEIGHT; i++, j++) {
+								if(this.board.getPiece(i, j) != player.getColor().getOpposite()) {
+									if(this.board.getPiece(i, j) == player.getColor() && !squares.contains(new Point(x - 1, y - 1))) {
+										squares.add(new Point(x - 1, y - 1));
 									}
+									break down_left;
 								}
 							}
 						}
-						down_right:if(this.board.getPiece(x+1, y-1) == Piece.BLANK) {
+						down_right: if(this.board.getPiece(x+1, y-1) == Piece.BLANK) {
 							for(int i = y+1; i < (Board.HEIGHT); i++) {
 								for(int j = x-1; j < 0;j++) {
 									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && squares.contains(new Point(x+1, y-1))) {
+										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y-1))) {
 											squares.add(new Point(x+1, y-1));
 										}
 										break down_right;
@@ -104,7 +100,7 @@ public class Game {
 							for(int i = y-1; i < 0; i++) {
 								for(int j = x+1; j < (Board.WIDTH);j++) {
 									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && squares.contains(new Point(x-1, y+1))) {
+										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x-1, y+1))) {
 											squares.add(new Point(x-1, y+1));
 										}
 										break up_left;
@@ -112,11 +108,11 @@ public class Game {
 								}
 							}
 						}
-						up_right:if(this.board.getPiece(x+1, y+1) == Piece.BLANK) {
+						up_right: if(this.board.getPiece(x+1, y+1) == Piece.BLANK) {
 							for(int i = y-1; i < 0; i++) {
 								for(int j = x-1; j < 0;j++) {
 									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && squares.contains(new Point(x+1, y+1))) {
+										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y+1))) {
 											squares.add(new Point(x+1, y+1));
 										}
 										break up_right;
@@ -125,6 +121,7 @@ public class Game {
 							}
 						}
 					}
+				}
 			}
 		}
 		
