@@ -15,6 +15,7 @@ public class Game {
 	
 	private Player current;
 	
+	
 	public Game(Player player1, Player player2) {
 		this.board = new Board();
 		
@@ -25,7 +26,22 @@ public class Game {
 	}
 	
 	public void play(Player player, Point shot) {
+		if(player != this.current)
+			return;
 		
+		if(this.board.getPiece(shot) == Piece.BLANK && this.getPossiblesShots(player).contains(shot)) {
+			this.board.setPiece(player.getColor(), shot);
+			this.toggleCurrent();
+			
+			if(getPossiblesShots(this.current).isEmpty()) {
+				if(getPossiblesShots(player).isEmpty()) this.gameOver();
+			}
+		}		
+		
+	}
+	
+	public void gameOver() {
+		//TODO game over
 	}
 	
 	public List<Point> getPossiblesShots(Player player) {
@@ -34,6 +50,7 @@ public class Game {
 			for(int x = 0; x < Board.WIDTH; x++) {
 				if(Board.canPlayOn(x, y)) {
 					if(this.board.getPiece(x, y) == player.getColor().getOpposite()) {
+						
 						left: if(this.board.getPiece(x - 1, y) == Piece.BLANK) {
 							for(int i = x + 1; i < Board.WIDTH; i++) {
 								if(this.board.getPiece(i, y) != player.getColor().getOpposite()) {
@@ -85,38 +102,32 @@ public class Game {
 							}
 						}
 						down_right: if(this.board.getPiece(x+1, y-1) == Piece.BLANK) {
-							for(int i = y+1; i < (Board.HEIGHT); i++) {
-								for(int j = x-1; j < 0;j++) {
-									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y-1))) {
-											squares.add(new Point(x+1, y-1));
-										}
-										break down_right;
+							for(int i = y+1, j = x-1; i < (Board.HEIGHT) && j >= 0; i++, j--) {
+								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
+									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y-1))) {
+										squares.add(new Point(x+1, y-1));
 									}
+									break down_right;
 								}
 							}
 						}
 						up_left:if(this.board.getPiece(x-1, y+1) == Piece.BLANK) {
-							for(int i = y-1; i < 0; i++) {
-								for(int j = x+1; j < (Board.WIDTH);j++) {
-									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x-1, y+1))) {
-											squares.add(new Point(x-1, y+1));
-										}
-										break up_left;
+							for(int i = y-1, j = x+1; i >= 0 && j < (Board.WIDTH); i--, j++) {
+								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
+									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x-1, y+1))) {
+										squares.add(new Point(x-1, y+1));
 									}
+									break up_left;
 								}
 							}
 						}
 						up_right: if(this.board.getPiece(x+1, y+1) == Piece.BLANK) {
-							for(int i = y-1; i < 0; i++) {
-								for(int j = x-1; j < 0;j++) {
-									if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
-										if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y+1))) {
-											squares.add(new Point(x+1, y+1));
-										}
-										break up_right;
+							for(int i = y-1, j = x-1; i >= 0 && j >= 0; i--, j--) {
+								if(this.board.getPiece(j, i) != player.getColor().getOpposite()) {
+									if(this.board.getPiece(j, i) == player.getColor() && !squares.contains(new Point(x+1, y+1))) {
+										squares.add(new Point(x+1, y+1));
 									}
+									break up_right;
 								}
 							}
 						}
@@ -126,6 +137,14 @@ public class Game {
 		}
 		
 		return squares;
+	}
+	
+	public void toggleCurrent() {
+		if(this.current == this.player1) {
+			this.current = this.player2;
+		} else if(this.current == this.player2) {
+			this.current = this.player1;
+		} else this.current = this.player1;
 	}
 	
 	public Player getCurrent() {
