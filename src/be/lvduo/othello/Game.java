@@ -17,7 +17,7 @@ public class Game {
 	private Player current;
 	private HashMap<Point, List<Directions>> availableShots;
 	
-	private boolean isOver;
+	private int winner = -1;
 	
 	
 	public Game(Player player1, Player player2) {
@@ -40,12 +40,33 @@ public class Game {
 	}
 	
 	public boolean isOver() {
-		return isOver;
+		return winner != -1;
 	}
 	
 	public void gameOver() {
-		this.isOver = true;
-		// TODO Other things
+		int nBlanks = 0;
+		double nPlayer1 = 0.0;
+		for(int x = 0; x < Board.WIDTH; x++) {
+			for(int y = 0; y < Board.HEIGHT; y++) {
+				Piece p = this.board.getPiece(x, y);
+				if(!p.isPiece())
+					nBlanks++;
+				else if(p == this.player1.getColor())
+					nPlayer1++;
+			}
+		}
+		double halfAvailablePieces = ((double) (Board.WIDTH*Board.HEIGHT - nBlanks)) / 2.0;
+		if(nPlayer1 > halfAvailablePieces) {
+			this.winner = 0;
+		} else if(nPlayer1 == halfAvailablePieces) {
+			this.winner = 2;
+		} else {
+			this.winner = 1;
+		}
+	}
+	
+	public int getWinner() {
+		return winner;
 	}
 	
 	private void togglePiece(Point point, List<Directions> directions) {
@@ -104,6 +125,17 @@ public class Game {
 	
 	public Player getCurrent() {
 		return current;
+	}
+	
+	public Player getPlayer(int i) {
+		switch (i) {
+		case 0:
+			return player1;
+		case 1:
+			return player2;
+		default:
+			return null;
+		}
 	}
 	
 	public Board getBoard() {
