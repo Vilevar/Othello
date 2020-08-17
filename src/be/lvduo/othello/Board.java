@@ -27,8 +27,15 @@ public class Board {
 		this.setPiece(Piece.WHITE_PIECE, WIDTH/2, (HEIGHT/2) - 1);
 	}
 	
+	public void setPiece(Piece piece, Point point) {
+		this.setPiece(piece, point.x, point.y);
+	}
 	public void setPiece(Piece piece, int x, int y) {
 		this.board[y][x] = piece;
+	}
+	
+	public Piece getPiece(Point point) {
+		return this.getPiece(point.x, point.y);
 	}
 	
 	public Piece getPiece(int x, int y) {
