@@ -3,11 +3,16 @@ package be.lvduo.othello.gui;
 import java.util.Optional;
 
 import be.lvduo.othello.Main;
+import be.lvduo.othello.player.OpponentType;
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -15,7 +20,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -27,7 +32,7 @@ public class HomeGui implements IGui {
 	private static final double HEIGHT = 750;
 	
 	private Scene home;
-	private GameOptions gameOptions = new GameOptions();
+	private GameOptions gameOptions = new GameOptions(OpponentType.HUMAN, 0, false);
 	private Stage stage;
 	
 	public HomeGui() {
@@ -63,12 +68,34 @@ public class HomeGui implements IGui {
 		game.setTitle("Game options");
 		game.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 		
+		ChoiceBox<OpponentType> opponent = new ChoiceBox<>(FXCollections.observableArrayList(OpponentType.values()));
+		opponent.setValue(this.gameOptions.getOpponentType());
 		
+		Slider slider = new Slider(0, 5, this.gameOptions.getDifficulty());
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		slider.setMajorTickUnit(1);
+		slider.setBlockIncrement(0.1);
+		slider.setDisable(true);
 		
-		VBox base = new VBox();
+		CheckBox max = new CheckBox("Big boss");
+		max.setSelected(this.gameOptions.isBoss());
+		max.setDisable(true);
 		
-		game.getDialogPane().setContent(base);
-		game.setResultConverter(buttonType -> buttonType == ButtonType.CANCEL ? null : this.gameOptions);
+		opponent.valueProperty().addListener((obs, old, value) -> {
+			slider.setDisable(value != OpponentType.COMPUTER);
+			max.setDisable(value != OpponentType.COMPUTER);
+		});
+		max.selectedProperty().addListener((obs, old, value) -> {
+			slider.setDisable(value);
+		});
+		
+		VBox pane = new VBox(20, opponent, new HBox(10, slider, max));
+		pane.setAlignment(Pos.CENTER);
+		
+		game.getDialogPane().setContent(pane);
+		game.setResultConverter(buttonType -> buttonType == ButtonType.CANCEL ? null : 
+			(this.gameOptions = new GameOptions(opponent.getValue(), slider.getValue(), max.isSelected())));
 		return game.showAndWait();
 	}
 }
