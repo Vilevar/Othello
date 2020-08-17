@@ -19,12 +19,10 @@ public class Board {
 	}
 	
 	public void createBoard() {
-		// TODO Default board
-		
-		this.setPiece(Piece.WHITE_PIECE, (WIDTH/2)-1, (HEIGHT/2)-1);
-		this.setPiece(Piece.WHITE_PIECE, (WIDTH/2), (HEIGHT/2));
-		this.setPiece(Piece.BLACK_PIECE, (WIDTH/2)-1, (HEIGHT/2));
-		this.setPiece(Piece.BLACK_PIECE, (WIDTH/2), (HEIGHT/2)-1);
+		this.setPiece(Piece.WHITE_PIECE, (WIDTH/2) - 1, (HEIGHT/2) - 1);
+		this.setPiece(Piece.WHITE_PIECE, WIDTH/2, HEIGHT/2);
+		this.setPiece(Piece.BLACK_PIECE, (WIDTH/2) - 1, HEIGHT/2);
+		this.setPiece(Piece.BLACK_PIECE, WIDTH/2, (HEIGHT/2) - 1);
 	}
 	
 	public void setPiece(Piece piece, int x, int y) {

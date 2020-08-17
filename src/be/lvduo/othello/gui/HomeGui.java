@@ -31,7 +31,7 @@ public class HomeGui implements IGui {
 		Button newGame = new Button("New game");
 		newGame.setOnAction(e -> {
 			Optional<GameOptions> opt = this.createDialog();
-			if(opt.isPresent()) {
+			if(opt != null && opt.isPresent()) {
 				new BoardGui(this.gameOptions = opt.get()).setScene(this.stage);
 			}
 		});
@@ -55,6 +55,6 @@ public class HomeGui implements IGui {
 	
 	private Optional<GameOptions> createDialog() {
 		Dialog<GameOptions> game;
-		return null;
+		return Optional.of(this.gameOptions);
 	}
 }
