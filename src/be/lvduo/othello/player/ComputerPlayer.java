@@ -11,17 +11,15 @@ import be.lvduo.othello.Piece;
 
 public class ComputerPlayer implements Player {
 	
-	private static final int INIT_DEPTH = 10;
-	
 	private Piece color;
-	private double difficulty;
-	private boolean boss;
-	private Piece[] colors;
+	private int difficulty;
+//	private Piece[] colors;
 	
-	public ComputerPlayer(Piece color, double difficulty, boolean boss) {
+	public ComputerPlayer(Piece color, int difficulty) {
 		if(!color.isPiece()) throw new IllegalArgumentException("The color must be a piece not as "+color);
 		this.color = color;
-		this.colors = new Piece[] {color.getOpposite(), color};
+		this.difficulty = difficulty;
+//		this.colors = new Piece[] {color.getOpposite(), color};
 	}
 
 	@Override
@@ -44,7 +42,7 @@ public class ComputerPlayer implements Player {
 		for(Entry<Point, List<Direction>> action : actions.entrySet()) {
 			Board child = board.clone();
 			child.togglePieces(action.getKey(), color, action.getValue());
-			double value = this.minimax(child, INIT_DEPTH, -200, 200, false, false);
+			double value = this.minimax(child, this.difficulty, -200, 200, false, false);
 			if(value > maxValue) {
 				maxValue = value;
 				maxAction = action.getKey();

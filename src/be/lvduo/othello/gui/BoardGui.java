@@ -16,7 +16,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -74,6 +77,7 @@ public class BoardGui implements IGui {
 		this.drawBackground();
 		this.game.getBoard().createBoard();
 		this.update();
+		this.tryToPlayOther();
 		
 		this.scene.setOnMouseDragged(e -> this.testPosition(e.getSceneX(), e.getSceneY()));
 		this.scene.setOnMouseReleased(e -> this.handleAction(e.getSceneX(), e.getSceneY()));
@@ -166,7 +170,12 @@ public class BoardGui implements IGui {
 			this.timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					HomeGui.HOME.setScene(stage);
+					Platform.runLater(() -> {
+						Alert alert = new Alert(AlertType.INFORMATION, "Go back to home", ButtonType.OK);
+						alert.setTitle("Return");
+						alert.showAndWait();
+						HomeGui.HOME.setScene(stage);
+					});
 				}
 			}, 10_000);
 		} else {

@@ -7,7 +7,7 @@ import be.lvduo.othello.Piece;
 
 public class OnlinePlayer implements Player {
 
-	public OnlinePlayer(Piece color, double difficulty, boolean boss) {
+	public OnlinePlayer(Piece color, int difficulty) {
 	}
 	
 	@Override

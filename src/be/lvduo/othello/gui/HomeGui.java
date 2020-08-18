@@ -9,10 +9,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -20,7 +20,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -32,7 +31,7 @@ public class HomeGui implements IGui {
 	private static final double HEIGHT = 750;
 	
 	private Scene home;
-	private GameOptions gameOptions = new GameOptions(OpponentType.HUMAN, 0, false);
+	private GameOptions gameOptions = new GameOptions(OpponentType.HUMAN, 0);
 	private Stage stage;
 	
 	public HomeGui() {
@@ -69,33 +68,28 @@ public class HomeGui implements IGui {
 		game.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 		
 		ChoiceBox<OpponentType> opponent = new ChoiceBox<>(FXCollections.observableArrayList(OpponentType.values()));
-		opponent.setValue(this.gameOptions.getOpponentType());
 		
-		Slider slider = new Slider(0, 5, this.gameOptions.getDifficulty());
+		Slider slider = new Slider(0, 15, this.gameOptions.getDifficulty());
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(1);
-		slider.setBlockIncrement(0.1);
+		slider.setMinorTickCount(0);
+		slider.setBlockIncrement(1);
+		slider.setSnapToTicks(true);
+		slider.setTooltip(new Tooltip("How high is the difficulty how much time it needs to makes his decision."));
 		slider.setDisable(true);
-		
-		CheckBox max = new CheckBox("Big boss");
-		max.setSelected(this.gameOptions.isBoss());
-		max.setDisable(true);
 		
 		opponent.valueProperty().addListener((obs, old, value) -> {
 			slider.setDisable(value != OpponentType.COMPUTER);
-			max.setDisable(value != OpponentType.COMPUTER);
 		});
-		max.selectedProperty().addListener((obs, old, value) -> {
-			slider.setDisable(value);
-		});
+		opponent.setValue(this.gameOptions.getOpponentType());
 		
-		VBox pane = new VBox(20, opponent, new HBox(10, slider, max));
+		VBox pane = new VBox(20, opponent, slider);
 		pane.setAlignment(Pos.CENTER);
 		
 		game.getDialogPane().setContent(pane);
 		game.setResultConverter(buttonType -> buttonType == ButtonType.CANCEL ? null : 
-			(this.gameOptions = new GameOptions(opponent.getValue(), slider.getValue(), max.isSelected())));
+			(this.gameOptions = new GameOptions(opponent.getValue(), (int) Math.round(slider.getValue()))));
 		return game.showAndWait();
 	}
 }

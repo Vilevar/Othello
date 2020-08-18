@@ -13,11 +13,11 @@ public enum OpponentType {
 		this.creator = creator;
 	}
 	
-	public Player createInstance(Piece color, double difficulty, boolean boss) {
-		return this.creator.create(color, difficulty, boss);
+	public Player createInstance(Piece color, int difficulty) {
+		return this.creator.create(color, difficulty);
 	}
 	
 	private static interface IPlayerCreator {
-		Player create(Piece color, double difficulty, boolean boss);
+		Player create(Piece color, int difficulty);
 	}
 }

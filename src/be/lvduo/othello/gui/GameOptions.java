@@ -8,13 +8,11 @@ import be.lvduo.othello.player.OpponentType;
 public class GameOptions {
 	
 	private OpponentType opponentType;
-	private double difficulty;
-	private boolean boss;
+	private int difficulty;
 	
-	public GameOptions(OpponentType opponentType, double difficulty, boolean boss) {
+	public GameOptions(OpponentType opponentType, int difficulty) {
 		this.opponentType = opponentType;
 		this.difficulty = difficulty;
-		this.boss = boss;
 	}
 
 	public OpponentType getOpponentType() {
@@ -25,11 +23,7 @@ public class GameOptions {
 		return difficulty;
 	}
 	
-	public boolean isBoss() {
-		return boss;
-	}
-	
 	public Game toGame() {
-		return new Game(new HumanPlayer(Piece.BLACK_PIECE), this.opponentType.createInstance(Piece.WHITE_PIECE, this.difficulty, this.boss));
+		return new Game(new HumanPlayer(Piece.BLACK_PIECE), this.opponentType.createInstance(Piece.WHITE_PIECE, this.difficulty));
 	}
 }
