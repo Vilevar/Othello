@@ -39,7 +39,11 @@ public class HomeGui implements IGui {
 		newGame.setOnAction(e -> {
 			Optional<GameOptions> opt = this.createDialog();
 			if(opt != null && opt.isPresent()) {
-				new BoardGui(this.gameOptions = opt.get()).setScene(this.stage);
+				this.gameOptions = opt.get();
+				if(opt.get().getOpponentType() == OpponentType.ONLINE) {
+					new OnlinePanel().setScene(this.stage);
+				} else
+					new BoardGui(opt.get()).setScene(this.stage);
 			}
 		});
 		Button stats = new Button("Statistics");
@@ -90,6 +94,7 @@ public class HomeGui implements IGui {
 		game.getDialogPane().setContent(pane);
 		game.setResultConverter(buttonType -> buttonType == ButtonType.CANCEL ? null : 
 			(this.gameOptions = new GameOptions(opponent.getValue(), (int) Math.round(slider.getValue()))));
+		
 		return game.showAndWait();
 	}
 }

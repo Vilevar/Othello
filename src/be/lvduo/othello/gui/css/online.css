@@ -1,0 +1,62 @@
+/*	left container	*/
+
+.button {
+	-fx-pref-width: 200px;
+	-fx-pref-height: 50px;
+
+	-fx-background-color: rgba(0,0,0,0);
+	
+	-fx-border-width: 3px;
+	-fx-border-style: solid;
+	-fx-border-color: linear-gradient(to left, rgb(68,56,255), rgb(253,56,255));
+	
+	-fx-color: rgb(0,0,0);
+	-fx-font-weight: bold;
+	-fx-font-size: 18px;
+	-fx-letter-spacing: .5px;
+	-fx-text-transform: lowercase;
+	
+	-fx-cursor: hand;
+}
+
+.button:hover {
+	-fx-background-color: linear-gradient(to left, rgb(68,56,255), rgb(253,56,255));
+}
+
+/*	right container	*/
+
+.column {
+	-fx-alignment: center;
+}
+
+.head-c {
+	-fx-font-weight: bold;
+}
+
+.line {
+	-fx-cursor: hand;
+}
+
+.line:hover {
+	-fx-background-color: skyblue;
+}
+
+.top {
+	-fx-pref-width: 35px;	/*10%;*/
+}
+
+.name {
+	-fx-pref-width: 105px;	/*30%;*/
+}
+
+.victories {
+	-fx-pref-width: 70px;	/*10%;*/
+}
+
+.points {
+	-fx-pref-width: 52.5px;	/*15%;*/
+}
+
+.status {
+	-fx-pref-width: 87.5px;	/*25%;*/
+}
