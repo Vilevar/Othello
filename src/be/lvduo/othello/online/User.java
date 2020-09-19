@@ -1,6 +1,6 @@
 package be.lvduo.othello.online;
 
-public class User {
+public class User implements Comparable<User> {
 	
 	private String name;
 	private int victories;
@@ -8,14 +8,25 @@ public class User {
 	private boolean inGame;
 	
 	
-	public User(String nickname) {
-		this.name = nickname;
+	public User(String name) {
+		this.name = name;
 		this.victories = this.defeats = 0;
 		this.inGame = false;
 	}
 	
-	public String getNickName() {
+	public User(String name, int victories, int defeats, boolean inGame) {
+		this.name = name;
+		this.victories = victories;
+		this.defeats = defeats;
+		this.inGame = inGame;
+	}
+
+	public String getNickname() {
 		return this.name;
+	}
+	
+	public void setNickname(String nickname) {
+		this.name = nickname;
 	}
 	
 	public double getRatio() {
@@ -24,7 +35,7 @@ public class User {
 		return (this.victories / (this.victories + this.defeats));
 	}
 	
-	public double getPoints() {
+	public int getPoints() {
 		return (Math.max(0, (100*this.victories) - (50*this.defeats)));
 	}
 	
@@ -52,4 +63,16 @@ public class User {
 		return this.inGame;
 	}
 
+	@Override
+	public int compareTo(User user) {
+		return (user.getPoints() - this.getPoints());
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof User))
+			return false;
+		
+		return ((User) obj).getNickname().equalsIgnoreCase(this.name);
+	}
 }

@@ -8,6 +8,9 @@ import be.lvduo.othello.Board;
 import be.lvduo.othello.Game;
 import be.lvduo.othello.Main;
 import be.lvduo.othello.Piece;
+import be.lvduo.othello.online.network.packets.CPacketSendAction;
+import be.lvduo.othello.player.ComputerPlayer;
+import be.lvduo.othello.player.OnlinePlayer;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -63,6 +66,8 @@ public class BoardGui implements IGui {
 	
 	
 	public BoardGui(GameOptions options) {
+		if(Main.class != null)
+			Main.client.setHome(this);
 		this.game = options.toGame();
 		
 		Button b = new Button("", new ImageView(new Image(Main.class.getClassLoader().getResourceAsStream("be/lvduo/othello/gui/control.png"))));
@@ -153,11 +158,23 @@ public class BoardGui implements IGui {
 			}
 		}
 		if(this.game.isOver()) {
-			this.currentPlayer.setOpacity(0);
-			GraphicsContext ctx = this.canvas.getGraphicsContext2D();
-			ctx.setTextAlign(TextAlignment.CENTER);
-			ctx.setTextBaseline(VPos.CENTER);
-			ctx.setFont(Font.font("Arial", FontPosture.REGULAR, 48));
+			this.gameOver(false);
+		} else {
+			this.currentPlayer.setFill(this.game.getCurrent().getColor().getColor());
+		}
+	}
+	
+	public void gameOver(boolean b) {
+		System.out.println("the game is over");
+		this.currentPlayer.setOpacity(0);
+		GraphicsContext ctx = this.canvas.getGraphicsContext2D();
+		ctx.setTextAlign(TextAlignment.CENTER);
+		ctx.setTextBaseline(VPos.CENTER);
+		ctx.setFont(Font.font("Arial", FontPosture.REGULAR, 48));
+		if(b) {
+			ctx.setFill(this.game.getPlayer(0).getColor().getColor());
+			ctx.fillText("The player "+(1)+" won !", this.currentPlayer.getCenterX(), this.currentPlayer.getCenterY());
+		} else {
 			int winner = this.game.getWinner();
 			if(winner == 2) {
 				ctx.setFill(Color.RED);
@@ -167,20 +184,22 @@ public class BoardGui implements IGui {
 				ctx.setFill(this.game.getPlayer(winner).getColor().getColor());
 				ctx.fillText("The player "+(winner + 1)+" won !", this.currentPlayer.getCenterX(), this.currentPlayer.getCenterY());
 			}
-			this.timer.schedule(new TimerTask() {
-				@Override
-				public void run() {
-					Platform.runLater(() -> {
-						Alert alert = new Alert(AlertType.INFORMATION, "Go back to home", ButtonType.OK);
-						alert.setTitle("Return");
-						alert.showAndWait();
-						HomeGui.HOME.setScene(stage);
-					});
-				}
-			}, 10_000);
-		} else {
-			this.currentPlayer.setFill(this.game.getCurrent().getColor().getColor());
 		}
+		this.timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(() -> {
+					Alert alert = new Alert(AlertType.INFORMATION, "Go back to home", ButtonType.OK);
+					alert.setTitle("Return");
+					alert.showAndWait();
+					if(Main.client != null) {
+						new OnlinePanel().setScene(stage);
+					}
+					else
+						HomeGui.HOME.setScene(stage);
+				});
+			}
+		}, 10_000);
 	}
 	
 	private void createControlPanel() {
@@ -207,14 +226,23 @@ public class BoardGui implements IGui {
 		Point pt;
 		if(this.game.getCurrent().isHuman() && Board.isInBoard(pt = this.convertToPoint(x, y)) && this.game.getPossiblesShots(this.game.getCurrent())
 				.containsKey(pt) && !this.game.isOver()) {
-			this.game.play(pt);
+			this.game.play(pt); 
+			if(this.game.getPlayer(0) instanceof OnlinePlayer || this.game.getPlayer(1) instanceof OnlinePlayer)
+				try {Main.client.getNetwork().sendPacket(new CPacketSendAction(pt));} catch (Exception e) {e.printStackTrace();}
 			this.update();
 			this.tryToPlayOther();
 		}
 	}
 	
+	public void onlinePlaying(Point pt) {
+		Platform.runLater(() -> {
+			this.game.play(pt);
+			this.update();
+		});
+	}
+	
 	private void tryToPlayOther() {
-		if(!game.getCurrent().isHuman() && !this.game.isOver()) {
+		if((game.getCurrent() instanceof ComputerPlayer) && !this.game.isOver()) {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
@@ -248,5 +276,9 @@ public class BoardGui implements IGui {
 		if(add)
 			this.group.getChildren().add(circle);
 		return circle;
+	}
+	
+	public Game getGame() {
+		return this.game;
 	}
 }

@@ -23,6 +23,10 @@
 	-fx-background-color: linear-gradient(to left, rgb(68,56,255), rgb(253,56,255));
 }
 
+.active {
+	-fx-background-color: linear-gradient(to left, rgb(68,56,255), rgb(253,56,255));
+}
+
 /*	right container	*/
 
 .column {

@@ -54,7 +54,6 @@ public class Board implements Cloneable {
 			for(int x = 0; x < Board.WIDTH; x++) {
 				if(Board.isInBoard(x, y)) {
 					if(this.getPiece(x, y) == color.getOpposite()) {
-		
 						dir: for(Direction direction : Direction.values()) {
 							Point point = new Point(x - direction.dirX, y - direction.dirY);
 							if(this.getPiece(point) == Piece.BLANK) {
@@ -136,4 +135,3 @@ public class Board implements Cloneable {
 		return str.toString();
 	}
 }
-

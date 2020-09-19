@@ -6,20 +6,26 @@ import be.lvduo.othello.Board;
 import be.lvduo.othello.Piece;
 
 public class OnlinePlayer implements Player {
+	
+	private Piece color;
+	
+	public OnlinePlayer(Piece color) {
+		this(color, 0);
+	}
 
 	public OnlinePlayer(Piece color, int difficulty) {
+		if(!color.isPiece()) throw new IllegalArgumentException("The color must be a piece not as "+color);
+		this.color = color;
 	}
 	
 	@Override
 	public boolean isHuman() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public Piece getColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return color;
 	}
 
 	@Override

@@ -41,7 +41,8 @@ public class HomeGui implements IGui {
 			if(opt != null && opt.isPresent()) {
 				this.gameOptions = opt.get();
 				if(opt.get().getOpponentType() == OpponentType.ONLINE) {
-					new OnlinePanel().setScene(this.stage);
+					new NicknamePanel().setScene(this.stage);
+					// new OnlinePanel().setScene(this.stage);
 				} else
 					new BoardGui(opt.get()).setScene(this.stage);
 			}

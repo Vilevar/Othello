@@ -1,11 +1,15 @@
 package be.lvduo.othello;
 
 import be.lvduo.othello.gui.HomeGui;
+import be.lvduo.othello.online.Client;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	
+	public static Client client;
+	
 
 	public static void main(String[] args) {
 		launch(args);

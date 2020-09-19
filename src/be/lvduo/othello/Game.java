@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 
+import be.lvduo.othello.player.OnlinePlayer;
 import be.lvduo.othello.player.Player;
 
 public class Game {
@@ -21,17 +22,20 @@ public class Game {
 	
 	public Game(Player player1, Player player2) {
 		this.board = new Board();
-		
-		if(Math.random() < 0.5) {
-			this.player1 = player1;
-			this.player2 = player2;
-		} else {
+
+		if(player1 instanceof OnlinePlayer || player2 instanceof OnlinePlayer) {
 			this.player1 = player2;
 			this.player2 = player1;
-		}
+		} else
+			if(Math.random() < 0.5) {
+				this.player1 = player1;
+				this.player2 = player2;
+			} else {
+				this.player1 = player2;
+				this.player2 = player1;
+			}
 		
-		this.current = this.player1;
-		
+			this.current = this.player1;
 	}
 	
 	public void play(Point shot) {
@@ -39,7 +43,7 @@ public class Game {
 			this.board.togglePieces(shot, this.current.getColor(), this.getPossiblesShots(this.current).get(shot));
 			if(this.getPossiblesShots(this.toggleCurrent()).isEmpty() && this.getPossiblesShots(this.toggleCurrent()).isEmpty())
 				this.gameOver();
-		}		
+		}
 	}
 	
 	public boolean isOver() {
@@ -87,6 +91,7 @@ public class Game {
 			this.current = this.player1;
 		}
 		this.availableShots = null;
+
 		return this.current;
 	}
 	
