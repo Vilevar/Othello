@@ -1,0 +1,39 @@
+.title {
+	-fx-font-size: 20px;
+	-fx-font-weight: bold;
+	-fx-fill: rgb(17,70,97);
+}
+
+.textfield {
+	-fx-background-color: rgba(0,0,0,0);
+	
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-color: rgb(17,70,97);
+	
+	-fx-text-fill: rgb(17,70,97);
+	-fx-font-size: 13px;
+	-fx-font-weight: bold;
+	-fx-alignment: center;
+}
+
+.submit-b {
+	-fx-background-color: rgba(0,0,0,0);
+	
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-color: rgb(17,70,97);
+	
+	-fx-text-fill: rgb(17,70,97);
+	-fx-font-weight: bold;
+	-fx-font-size: 15px;
+	-fx-letter-spacing: .5px;
+	-fx-text-transform: lowercase;
+	
+	-fx-cursor: hand;
+}
+
+.button:hover {
+	-fx-text-fill: rgb(255,255,255);
+	-fx-background-color: rgb(17,70,97);
+}
