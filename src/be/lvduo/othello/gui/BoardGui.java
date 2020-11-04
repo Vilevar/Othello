@@ -66,7 +66,7 @@ public class BoardGui implements IGui {
 	
 	
 	public BoardGui(GameOptions options) {
-		if(Main.class != null)
+		if(Main.client != null)
 			Main.client.setHome(this);
 		this.game = options.toGame();
 		
