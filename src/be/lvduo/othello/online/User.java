@@ -1,6 +1,6 @@
 package be.lvduo.othello.online;
 
-public class User implements Comparable<User> {
+public class User {
 	
 	private String name;
 	private int victories;
@@ -61,11 +61,6 @@ public class User implements Comparable<User> {
 	
 	public boolean isInGame() {
 		return this.inGame;
-	}
-
-	@Override
-	public int compareTo(User user) {
-		return (user.getPoints() - this.getPoints());
 	}
 	
 	@Override

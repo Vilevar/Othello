@@ -130,7 +130,8 @@ public class OnlinePanel implements IGui {
 	//	this.users.add(new User("loic"));	//exemple
 	//	this.users.add(new User("Vilevar"));//exmeple
 		
-		Collections.sort(this.users);
+		Collections.sort(this.users,
+				(u1, u2) -> u2.getPoints() - u1.getPoints());
 
 		VBox top = new VBox(new Label("Top"));
 		top.getStyleClass().addAll("top", "head-c", "column");
