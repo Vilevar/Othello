@@ -80,6 +80,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	public void sendPacket(Packet<?> packet) throws Exception {
 		this.channel.writeAndFlush(this.writePacket(packet));
+		System.out.println("Send packet type "+packet.getClass().getSimpleName());
 	}
 	
 	@SuppressWarnings("unchecked")

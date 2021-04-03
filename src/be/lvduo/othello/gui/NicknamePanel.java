@@ -74,7 +74,7 @@ public class NicknamePanel implements IGui {
 		stage.setScene(this.scene);
 		stage.setResizable(false);
 		stage.centerOnScreen();
-		Main.client = new Client("127.0.0.1", 8080);
+		Main.client = new Client("217.182.222.140", 27585);
 		this.stage = stage;
 	}
 
