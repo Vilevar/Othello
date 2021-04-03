@@ -79,7 +79,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<ByteBuf> {
 	}
 	
 	public void sendPacket(Packet<?> packet) throws Exception {
-		this.channel.writeAndFlush(this.writePacket(packet));
+		this.channel.writeAndFlush(this.writePacket(packet)).sync();
 		System.out.println("Send packet type "+packet.getClass().getSimpleName());
 	}
 	

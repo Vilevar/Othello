@@ -1,6 +1,7 @@
 package be.lvduo.othello.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -132,6 +133,7 @@ public class OnlinePanel implements IGui {
 		
 		Collections.sort(this.users,
 				(u1, u2) -> u2.getPoints() - u1.getPoints());
+		System.out.println(Arrays.toString(this.users.toArray()));
 
 		VBox top = new VBox(new Label("Top"));
 		top.getStyleClass().addAll("top", "head-c", "column");

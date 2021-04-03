@@ -70,4 +70,9 @@ public class User {
 		
 		return ((User) obj).getNickname().equalsIgnoreCase(this.name);
 	}
+	
+	@Override
+	public String toString() {
+		return "["+this.name + " " + this.getPoints()+"]";
+	}
 }
