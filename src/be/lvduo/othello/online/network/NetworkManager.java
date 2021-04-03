@@ -83,6 +83,12 @@ public class NetworkManager extends SimpleChannelInboundHandler<ByteBuf> {
 		System.out.println("Send packet type "+packet.getClass().getSimpleName());
 	}
 	
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		System.out.println("Reading something");
+		super.channelRead(ctx, msg);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf buf) throws Exception {
