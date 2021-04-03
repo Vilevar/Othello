@@ -173,7 +173,7 @@ public class OnlinePanel implements IGui {
 		//	r.getStyleClass().addAll("ratio");
 			VBox p = new VBox(new Label(u.getPoints()+""));
 			p.getStyleClass().addAll("points", "child", "column");
-			VBox s = new VBox(new Label(u.isInGame()?"Playing":"Waiting"));
+			VBox s = new VBox(new Label(u.isInGame() ? "Playing" : "Waiting"));
 			s.getStyleClass().addAll("status", "child", "column");
 			
 			HBox l = new HBox(t, n, v, p, s);

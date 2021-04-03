@@ -122,7 +122,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private void close(boolean packet) throws Exception {
 		if(closed) 
-			throw new IllegalStateException("Channel closed.");
+			throw new IllegalStateException("Channel already closed.");
 //		if(packet)
 //			this.channel.writeAndFlush(this.writePacket(packets.get(0).newInstance()), channel.voidPromise());
 		this.channel.close();

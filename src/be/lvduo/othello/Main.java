@@ -20,6 +20,11 @@ public class Main extends Application {
 		System.out.println("Starting Othello game");
 		stage.setOnCloseRequest(e -> {
 			e.consume();
+			try {
+				client.getNetwork().close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			System.exit(0);
 		});
 		HomeGui.HOME.setScene(stage);
